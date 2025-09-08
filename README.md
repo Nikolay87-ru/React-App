@@ -84,7 +84,7 @@ npm run build
 npm run preview
 ```
 
-5. **Запуск тестов** (localhost:4173):
+1. **Запуск тестов**:
 
 ```bash
 npm test
