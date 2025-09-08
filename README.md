@@ -1,5 +1,3 @@
-# Описание будет позже...
+# Ветка deploy
 
-###### Статус прокрытия логики проекта тестами:
-
-[![Build status](https://ci.appveyor.com/api/projects/status/03muvdl2hjuh22ut/branch/main?svg=true)](https://ci.appveyor.com/project/Nikolay87-ru/react-app/branch/main)
+Здесь, в ветке **deploy**, размещаются файлы собранного проекта из ветки **main** для развертывания на Github Pages
