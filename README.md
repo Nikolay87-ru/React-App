@@ -65,7 +65,7 @@
 1. **Установка зависимостей**:
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
 2. **Запуск в режиме разработки** (localhost:5173):
