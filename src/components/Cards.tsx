@@ -7,12 +7,15 @@ interface CardsProps {
 }
 
 const Cards: FC<CardsProps> = ({ cardsList, removeCard }) => {
+  const gridClass = cardsList.length === 1 
+    ? 'grid-cols-1' 
+    : cardsList.length === 2 
+    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-2' 
+    : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+
   return (
     <div className="w-full">
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-center mt-5 max-w-full
-        ${cardsList.length === 1 ? 'md:grid-cols-1 lg:grid-cols-1' : ''}
-        ${cardsList.length === 2 ? 'lg:grid-cols-2' : ''}`}
-      >
+      <div className={`grid ${gridClass} gap-5 justify-center mt-5 max-w-full`}>
         {cardsList.map((card) => (
           <div
             key={card.id}

@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import AddCardForm from './components/AddCardForm';
 import Cards from './components/Cards';
 import type { Card } from './type/card';
+import noImage from './assets/no-image.jpg';
 import './style/index.css';
 
 export const App = () => {
-  const [cardsList, setCardsList] = useState<Card[]>([]);
+  const [cardsList, setCardsList] = useState<Card[]>(() => {
+    const savedCards = localStorage.getItem('cards');
+    if (savedCards) {
+      const parsedCards = JSON.parse(savedCards);
+      return parsedCards.map((card: Card) => ({
+        ...card,
+        img: noImage
+      }));
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cards', JSON.stringify(cardsList));
+  }, [cardsList]); 
 
   const addCard = (newCard: Card) => {
     setCardsList([...cardsList, newCard]);
