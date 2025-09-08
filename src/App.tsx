@@ -45,4 +45,6 @@ export const App = () => {
 };
 
 const root = document.getElementById('root');
-createRoot(root!).render(<App />);
+if (root) {
+  createRoot(root).render(<App />);
+}
