@@ -1,37 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from '../src/App';
-
-// Mock localStorage
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => {
-      store[key] = value;
-    }),
-    removeItem: vi.fn((key: string) => {
-      delete store[key];
-    }),
-    clear: vi.fn(() => {
-      store = {};
-    }),
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
-// Mock URL.createObjectURL
-const createObjectURLMock = vi.fn();
-Object.defineProperty(window, 'URL', {
-  value: {
-    createObjectURL: createObjectURLMock,
-  },
-  writable: true,
-});
 
 // Mock файла для тестирования загрузки изображения
 const createTestFile = (name: string, type: string, size: number): File => {
@@ -47,10 +18,38 @@ vi.mock('../src/assets/no-image.jpg', () => ({
 
 describe('App Logic Tests', () => {
   const user = userEvent.setup();
+  let localStorageMock: {
+    getItem: Mock;
+    setItem: Mock;
+    removeItem: Mock;
+    clear: Mock;
+  };
+  let createObjectURLMock: Mock;
 
   beforeEach(() => {
-    localStorageMock.clear();
-    createObjectURLMock.mockReset();
+    // Mock localStorage
+    localStorageMock = {
+      getItem: vi.fn(),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
+      clear: vi.fn(),
+    };
+
+    // Mock URL.createObjectURL
+    createObjectURLMock = vi.fn();
+
+    // Устанавливаем моки
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+    });
+
+    Object.defineProperty(window, 'URL', {
+      value: {
+        createObjectURL: createObjectURLMock,
+      },
+      writable: true,
+    });
+
     vi.clearAllMocks();
   });
 
@@ -132,14 +131,15 @@ describe('App Logic Tests', () => {
   });
 
   it('должен удалять карточку', async () => {
-    // Предварительно добавляем карточку
-    localStorageMock.setItem('cards', JSON.stringify([
+    // Настраиваем мок localStorage с предварительными данными ДО рендера
+    const mockCards = [
       {
         id: 1,
         title: 'Карточка для удаления',
         img: 'test-image.jpg'
       }
-    ]));
+    ];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(mockCards));
     
     render(<App />);
     
@@ -178,7 +178,7 @@ describe('App Logic Tests', () => {
   });
 
   it('должен загружать карточки из localStorage при монтировании', async () => {
-    // Настраиваем мок localStorage с предварительными данными
+    // Настраиваем мок localStorage с предварительными данными ДО рендера
     const mockCards = [
       {
         id: 123,

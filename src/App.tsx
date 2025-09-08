@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
 import AddCardForm from './components/AddCardForm';
 import Cards from './components/Cards';
 import type { Card } from './type/card';
@@ -43,8 +42,3 @@ export const App = () => {
     </div>
   );
 };
-
-const root = document.getElementById('root');
-if (root) {
-  createRoot(root).render(<App />);
-}
